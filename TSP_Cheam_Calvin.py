@@ -4,9 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plo
 import os
 
+
 def txtToArr(file):
-    np.loadtxt(file)
-    return 
+    #load txt into an int arr
+    data = np.loadtxt(file,dtype=int)
+    return data
 
 def plotData(data):
     #loads the dataset txt file name 
@@ -14,17 +16,18 @@ def plotData(data):
     #plot calculations
     #x = data[,0]
     #y = data[,1]
-    plo.plot(x,y,marker='o')
+    #plo.plot(x,y,marker='o')
     plo.show()
 
 def BF_TSP():
 
     return ()
-def main():
 
-    source =[]
-    goal = []
-    plotData('TSP1.txt')
+def SA_TSP():
+    return()
+
+def main():
+    print(txtToArr('TSP1.txt'))
 
 if __name__ == "__main__":
     main()
