@@ -11,9 +11,9 @@ def ms_sq_generator():
     return tuple(sq)
 
 def check_neighbors(current_state):
-    #check for each possible st by swapping the r and d tiles of any given one
+    #check for each possible swap by swapping the r and d tiles of any given one
     neighbors =[]
-    #flatten into single list
+    #flatten into single list if not already so
     states=list(current_state)
     #check all items
     for i in range(3):
