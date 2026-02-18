@@ -5,7 +5,7 @@ import matplotlib.pyplot
 import os
 
 def ms_sq_generator():
-    # create a 1-9 arr, shuffle order and set it as 3 by 3 arr like goal, flattening after for easy work
+    # create a 1-9 arr, shuffle order flattening after for easy work
     sq=np.array([1,2,3,4,5,6,7,8,9])
     np.random.shuffle(sq)
     return tuple(sq)
@@ -51,7 +51,6 @@ def a_star_search(start,goal):
         #lowest score
         f,c,current = heapq.heappop(q)
         expanded_node +=1
-
         if current==goal:
             finish= time.time()-start_time
             return expanded_node,finish, c
@@ -67,18 +66,44 @@ def a_star_search(start,goal):
     return expanded_node, time.time()-start_time, -1
    
 
-def ucs_search():
-    return
+def ucs_search(start,goal):
+    start_time = time.time()
+    visited={start:0}
+    expanded_node=0
+    #queue of cost and current state
+    q = [(0,start)]
+
+    while q:
+        c, current = heapq.heappop(q)
+        expanded_node += 1
+
+        if current == goal:
+            finish = time.time() - start_time
+            return expanded_node, finish, c
+            
+        # Check all neighbors in next swap
+        for neighbor in check_neighbors(current):
+            nl = c + 1
+            if neighbor not in visited or nl < visited[neighbor]:
+                visited[neighbor] = nl
+                # priority is path cost (nl)
+                heapq.heappush(q, (nl, neighbor))
+    return expanded_node, time.time() - start_time, -1
 
 def main():
     source =ms_sq_generator()
     goal = (8,1,6,3,5,7,4,9,2)
     Nodes,finishT,cost=a_star_search(source,goal)
+    UCSnode,UCSfinishT,UCScost=ucs_search(source,goal)
     print(f'{np.array(source).reshape((3, 3))}')
     print(f'A* Search')
     print(f'Swaps:{cost}')
     print(f'Time taken:{finishT}')
     print(f'Nodes visited: {Nodes}')
+    print(f'UCS Search')
+    print(f'Swaps:{UCScost}')
+    print(f'Time taken:{UCSfinishT}')
+    print(f'Nodes visited: {UCSnode}')
     
     
     
