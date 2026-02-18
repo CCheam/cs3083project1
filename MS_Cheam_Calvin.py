@@ -5,14 +5,13 @@ import matplotlib.pyplot
 import os
 
 def ms_sq_generator():
-    # create a 1-9 arr, shuffle order and set it as 3 by 3 arr like goal
+    # create a 1-9 arr, shuffle order and set it as 3 by 3 arr like goal, flattening after for easy work
     sq=np.array([1,2,3,4,5,6,7,8,9])
     np.random.shuffle(sq)
-    ans=sq.reshape((3,3))
-    return tuple(ans)
+    return tuple(sq)
 
 def check_neighbors(current_state):
-    #check for each possible state by swapping the r and d tiles of any given one
+    #check for each possible st by swapping the r and d tiles of any given one
     neighbors =[]
     #flatten into single list
     states=list(current_state)
@@ -33,13 +32,39 @@ def check_neighbors(current_state):
                 neighbors.append(tuple(new_states))
     return neighbors
 
-
+def manhattan_h(state, goal):
+    # calculate distance to goal, using dict for easy lookup
+    dist = 0
+    goal_p = {val:(i//3,i%3) for i,val in enumerate(goal)}
+    for i,val in enumerate(state):
+        cr,cc = i//3,i%3
+        gr,gc=goal_p[val]
+        dist += abs(cr-gr) +abs(cc-gc)
+    return dist/2
 
 def a_star_search(start,goal):
     start_time = time.time()
-    visited={}
+    visited={start:0}
     expanded_node=0
-    return expanded_node, time.time()-start_time, visited
+    q=[(manhattan_h(start, goal),0,start)]
+    while q:
+        #lowest score
+        f,c,current = heapq.heappop(q)
+        expanded_node +=1
+
+        if current==goal:
+            finish= time.time()-start_time
+            return expanded_node,finish, c
+        #check 1 swap possibilities
+        for neighbor in check_neighbors(current):
+            nl = c + 1
+            if neighbor not in visited or nl <visited[neighbor]:
+                visited[neighbor] = nl
+                h = manhattan_h(neighbor, goal)
+                #update new f=g+h
+                heapq.heappush(q, (nl + h, nl, neighbor))
+
+    return expanded_node, time.time()-start_time, -1
    
 
 def ucs_search():
@@ -48,6 +73,12 @@ def ucs_search():
 def main():
     source =ms_sq_generator()
     goal = (8,1,6,3,5,7,4,9,2)
+    Nodes,finishT,cost=a_star_search(source,goal)
+    print(f'{np.array(source).reshape((3, 3))}')
+    print(f'A* Search')
+    print(f'Swaps:{cost}')
+    print(f'Time taken:{finishT}')
+    print(f'Nodes visited: {Nodes}')
     
     
     
