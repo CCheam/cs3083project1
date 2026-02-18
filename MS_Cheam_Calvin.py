@@ -9,8 +9,10 @@ def ms_sq_generator():
     sq=np.array([1,2,3,4,5,6,7,8,9])
     np.random.shuffle(sq)
     ans=sq.reshape((3,3))
+    return tuple(ans)
 
 def check_neighbors(current_state):
+    #check for each possible state by swapping the r and d tiles of any given one
     neighbors =[]
     #flatten into single list
     states=list(current_state)
@@ -31,15 +33,23 @@ def check_neighbors(current_state):
                 neighbors.append(tuple(new_states))
     return neighbors
 
-def a_star_search():
-    return 
-def main():
 
+
+def a_star_search(start,goal):
+    start_time = time.time()
+    visited={}
+    expanded_node=0
+    return expanded_node, time.time()-start_time, visited
+   
+
+def ucs_search():
+    return
+
+def main():
     source =ms_sq_generator()
-    goal = [[8,1,6], 
-            [3,5,7],
-            [4,9,2]
-            ] 
+    goal = (8,1,6,3,5,7,4,9,2)
+    
+    
     
 
 if __name__ == "__main__":
